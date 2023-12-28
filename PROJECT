@@ -5,6 +5,18 @@
 domain: my.domain
 layout:
 - go.kubebuilder.io/v4
+plugins:
+  deploy-image.go.kubebuilder.io/v1-alpha:
+    resources:
+    - domain: my.domain
+      group: webapp
+      kind: Memcached
+      options:
+        containerCommand: memcached,-m=64,-o,modern,-v
+        containerPort: "11211"
+        image: memcached:1.4.36-alpine
+        runAsUser: "1001"
+      version: v1alpha1
 projectName: guestbook-kubebuilder
 repo: my.domain/guestbook
 resources:
@@ -17,4 +29,13 @@ resources:
   kind: Guestbook
   path: my.domain/guestbook/api/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: my.domain
+  group: webapp
+  kind: Memcached
+  path: my.domain/guestbook/api/v1alpha1
+  version: v1alpha1
 version: "3"
